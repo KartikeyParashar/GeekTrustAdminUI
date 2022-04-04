@@ -1,0 +1,9 @@
+.footer {
+    width: 90vw;
+    margin: 0 auto !important;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+}
