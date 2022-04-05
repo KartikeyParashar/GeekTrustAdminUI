@@ -39,6 +39,7 @@ function App() {
     fetchTableDetails();
   }, []);
 
+
   const fetchTableDetails = async () => {
     setLoading(true);
     const res = await axios.get(config.url);
