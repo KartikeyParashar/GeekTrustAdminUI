@@ -6,14 +6,21 @@ import { Box, Checkbox, IconButton, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 //CSS Imports
 import "../css/adminTable.css";
+import AlertDialog from "./dialogs/AlertDialog";
+import FormDialog from './dialogs/FormDialog';
 
 export default function AdminTable({
   tableDetails,
   checkBoxHandler,
   checkHandlerForAllRowsOfCurrentPage,
-  deleteByIDHandler
+  deleteByIDHandler,
+  updateDetailHandler
 }) {
   const [allChecked, setAllChecked] = useState(false);
+  const [openAlert, setAlertDialog] = useState(false);
+  const [openForm, setFormDialog] = useState(false);
+  const [formData, setFormData] = useState({id: null, name: "", role: "'", email: ""})
+  const [id, setID] = useState(null);
 
   useEffect(() => {
     setAllChecked(
@@ -23,6 +30,25 @@ export default function AdminTable({
         : false
     );
   }, [tableDetails]);
+
+  const deleteHandler = (id) => {
+      setAlertDialog(true);
+      setID(id);
+  }
+
+  const openOrCloseAlertDialog = () => {
+    setAlertDialog(!openAlert);
+  }
+
+  const openOrCloseFormHandler = () => {
+    setFormDialog(!openForm);
+  }
+
+  const editDetailHandler = (id, name, email, role) => {
+    setFormDialog(true);
+    setFormData({...formData, id: id, name: name, 
+        email: email, role: role})
+  }
 
   const allCheckedHandler = () => {
     setAllChecked(!allChecked);
@@ -65,11 +91,13 @@ export default function AdminTable({
               <td className="role">{row.role}</td>
               <td>
                 <Stack direction="row" spacing={2}>
-                    <IconButton disabled={row.checked ? false : true}>
+                    <IconButton disabled={row.checked ? false : true}
+                        onClick={() => editDetailHandler(row.id, row.name, row.email, row.role)}
+                    >
                         <EditIcon sx={{ fontSize: "18px" }} />
                     </IconButton>
                     <IconButton disabled={row.checked ? false : true} 
-                        onClick={() => deleteByIDHandler(row.id)}
+                        onClick={() => deleteHandler(row.id)}
                     >
                         <DeleteIcon sx={{ fontSize: "18px" }} />
                     </IconButton>
@@ -79,6 +107,19 @@ export default function AdminTable({
           ))}
         </tbody>
       </table>
+      <AlertDialog 
+        open={openAlert} 
+        openOrCloseAlertDialog={openOrCloseAlertDialog} 
+        deleteRecords={deleteByIDHandler} 
+        paramsForDeletion={id}
+      />
+      <FormDialog 
+       open={openForm} 
+       openOrCloseFormHandler={openOrCloseFormHandler}
+       form={formData}
+       editDetailHandler={editDetailHandler}
+       updateDetailHandler={updateDetailHandler}
+       />
     </Box>
   );
 }
