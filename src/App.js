@@ -24,6 +24,11 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(8);
 
+  // Get Current Page Details
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableDetails.slice(indexOfFirstRow, indexOfLastRow);
+
   // Change Page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -38,7 +43,6 @@ function App() {
   useEffect(() => {
     fetchTableDetails();
   }, []);
-
 
   const fetchTableDetails = async () => {
     setLoading(true);
@@ -74,10 +78,7 @@ function App() {
     });
   };
 
-  // Get Current Page Details
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = tableDetails.slice(indexOfFirstRow, indexOfLastRow);
+  
 
   const deleteByIDHandler = (id) => {
     let copyOfTableDetails = tableDetails.filter(row => row.id !== id);
@@ -123,9 +124,11 @@ function App() {
     if ( value === "" ) {
       setDetails(dataWithCheckedStatus)
     } else {
-      setDetails(dataWithCheckedStatus.filter(row => row.role.toLowerCase().includes(value.toLowerCase()) || 
-                                            row.name.toLowerCase().includes(value.toLowerCase()) || 
-                                            row.email.toLowerCase().includes(value.toLowerCase()) ));
+      const details = dataWithCheckedStatus.filter(row => row.role.toLowerCase().includes(value.toLowerCase()) || 
+                                                   row.name.toLowerCase().includes(value.toLowerCase()) || 
+                                                   row.email.toLowerCase().includes(value.toLowerCase()) );
+      setDetails(details);
+      setCurrentPage(1);
     }
   }
 
