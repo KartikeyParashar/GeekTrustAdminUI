@@ -22,7 +22,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [openAlert, setAlertDialog] = React.useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(8);
 
   // Change Page
   const paginate = (pageNumber) => {
